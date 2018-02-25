@@ -30,7 +30,7 @@ app.use('/api/post', postRouter);
 app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => {
-   res.send(JSON.parse('{"title":"Welcome to the MeowCat API!"}'));
+   res.send(JSON.parse('{"title":"Welcome to the Andy API!"}'));
 });
 
 app.listen(port, () => {

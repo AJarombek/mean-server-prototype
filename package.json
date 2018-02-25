@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "rm -rf ./build && webpack --config src/webpack.config.js",
+    "start:dev": "webpack-dev-server --config src/webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +19,16 @@
   },
   "homepage": "https://github.com/AJarombek/mean-server-prototype#readme",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
+    "clean-webpack-plugin": "^0.1.18",
     "express": "^4.16.2",
-    "mongoose": "^5.0.7"
+    "mongoose": "^5.0.7",
+    "start-server-webpack-plugin": "^2.2.1",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-node-externals": "^1.6.0"
   }
 }
