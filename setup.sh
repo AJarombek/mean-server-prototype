@@ -34,8 +34,12 @@ npm install supertest --save-dev
 # Run the test suite
 npm run test
 
+# Istanbul and coveralls are used for code coverage reports
 npm install istanbul --save-dev
 
 npm run cover
 
 npm install coveralls mocha-lcov-reporter --save-dev
+
+# Babel polyfill is needed to use async functions
+npm install babel-polyfill --save-dev

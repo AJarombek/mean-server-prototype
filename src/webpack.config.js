@@ -19,7 +19,10 @@ const path = require("path");
  * output - where to emit the final bundle created by webpack
  */
 module.exports = {
-    entry: './src/app',
+    entry: [
+        'babel-polyfill',
+        './src/app'
+    ],
     target: "node",
     module: {
         rules: [{

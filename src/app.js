@@ -10,10 +10,12 @@ const bodyParser = require('body-parser');
 
 const Post = require('./model/post');
 const User = require('./model/user');
+const Test = require('./model/test');
 
 const userRouter = require('./route/userRouter')(User);
 const postRouter = require('./route/postRouter')(Post);
 const authRouter = require('./route/authRouter')();
+const testRouter = require('./route/testRouter')(Test);
 
 // Mongoose 5.0 uses native JS Promises by default (less config needed!)
 mongoose.connect('mongodb://127.0.0.1/meowcat');
@@ -25,6 +27,7 @@ app.use(bodyParser.json());
 
 const port = process.env.port || 3000;
 
+app.use('/api/test', testRouter);
 app.use('/api/user', userRouter);
 app.use('/api/post', postRouter);
 app.use('/api/auth', authRouter);
