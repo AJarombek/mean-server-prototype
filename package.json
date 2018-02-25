@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm run cover --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "start:dev": "webpack-node-dev --config src/webpack.config.js"
   },
   "repository": {
@@ -27,7 +29,10 @@
     "webpack": "^3.11.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^5.0.1",
+    "mocha-lcov-reporter": "^1.3.0",
     "supertest": "^3.0.0",
     "webpack-node-dev": "^0.3.0"
   }

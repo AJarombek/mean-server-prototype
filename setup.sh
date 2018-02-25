@@ -30,3 +30,12 @@ npm install mocha --save-dev
 
 # Supertest allows us to test HTTP REST endpoints
 npm install supertest --save-dev
+
+# Run the test suite
+npm run test
+
+npm install istanbul --save-dev
+
+npm run cover
+
+npm install coveralls mocha-lcov-reporter --save-dev
