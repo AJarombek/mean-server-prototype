@@ -9,12 +9,18 @@ npm install body-parser --save
 # Start up the basic server
 node src/app.js
 
+# Install webpack and babel dependencies
 npm install webpack --save
 npm install babel-loader babel-core babel-preset-env --save
-npm install webpack-node-externals start-server-webpack-plugin --save
 
-# Run a build with webpack - will watch for changes and hot reload the server
-npm run start:server
+# node-dev restarts the node process when a file is modified
+# https://github.com/fgnass/node-dev
+npm install -g node-dev
 
-npm install webpack-dev-server --save
-npm install clean-webpack-plugin --save
+# webpack-node-dev allows us to easily hook up our webpack/babel bundler/transpile process to node-dev
+# https://www.npmjs.com/package/webpack-node-dev
+npm i -D webpack-node-dev
+
+# Run a build with webpack - when a change occurs node-dev will restart the node process
+# start:dev is declared as an npm script in package.json
+npm run start:dev
