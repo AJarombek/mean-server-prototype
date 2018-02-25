@@ -4,8 +4,8 @@ node_js:
   - '8.0'
 
 script:
-  npm run test
-  npm run start:dev
+  - npm run test
+  - npm run start:dev
 
 after_success:
   - npm run coveralls
