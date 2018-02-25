@@ -24,3 +24,9 @@ npm i -D webpack-node-dev
 # Run a build with webpack - when a change occurs node-dev will restart the node process
 # start:dev is declared as an npm script in package.json
 npm run start:dev
+
+# Install mocha for unit testing
+npm install mocha --save-dev
+
+# Supertest allows us to test HTTP REST endpoints
+npm install supertest --save-dev

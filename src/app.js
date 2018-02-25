@@ -33,6 +33,6 @@ app.get('/', (req, res) => {
    res.send(JSON.parse('{"title":"Welcome to the Apps API!"}'));
 });
 
-app.listen(port, () => {
+module.exports = app.listen(port, () => {
    console.info(`Started MeowCat API on port ${port}`);
 });
