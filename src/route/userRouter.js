@@ -67,7 +67,7 @@ const routes = (User) => {
                 req.user = user;
                 next();
             } else {
-                res.status(404).send("Error: No User found with give Username");
+                res.status(404).send("Error: No User found with given Username");
             }
         }
     });
@@ -82,6 +82,7 @@ const routes = (User) => {
 
             user.first = req.body.first;
             user.last = req.body.last;
+            user.postCount = req.body.postCount;
 
             if (user.password !== req.body.password) {
                 console.info("Password Is Being Updated");
@@ -112,7 +113,7 @@ const routes = (User) => {
             remove().catch(error => res.status(500).send(error));
 
             async function remove() {
-                await user.remove();
+                await req.user.remove();
 
                 res.status(204).send();
             }

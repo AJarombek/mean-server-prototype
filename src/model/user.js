@@ -48,6 +48,10 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         required: true,
         match: /^[^\s]+$/
+    },
+    postCount: {
+        type: Number,
+        default: 0
     }
 });
 

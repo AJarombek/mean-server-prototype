@@ -12,7 +12,7 @@ exports.saveFile = function saveFile(name, data) {
 
     const base64 = data.replace(/^data:image\/([a-z]+);base64,$/, "");
 
-    writeFile(`${name}`, base64, 'base64', (err) => {
+    writeFile(`pics/${name}`, base64, 'base64', (err) => {
         console.error(err);
     });
 };
@@ -24,6 +24,18 @@ exports.loadFile = function loadFile(name) {
     const data = fs.readFileSync(name);
 
     return `data:image\/png;base64,${data}`;
+};
+
+// Remove a file from the filesystem.
+exports.removeFile = function removeFile(name) {
+    fs.unlink(`pics/${name}`, (err) => {
+
+        if (err) {
+            console.error('Failed to Remove File');
+        } else {
+            console.error(`File with name ${name} Removed`);
+        }
+    });
 };
 
 module.exports = exports;
