@@ -13,12 +13,14 @@ const routes = (Test) => {
     testRouter.route('/')
         .get((req, res) => {
 
+            run().catch(error => res.status(500).send(error));
+
             // New in Mongoose 5.0 - Using async functions to await MongoDB queries!
-            (async function run() {
+            async function run() {
                 const test = await Test.find().exec();
 
                 res.json(test);
-            })();
+            }
         });
 
     return testRouter;

@@ -6,6 +6,8 @@
 
 const fs = require('fs');
 
+// Save a file.  This function will be exported with the module
+// https://stackoverflow.com/questions/6926016/nodejs-saving-a-base64-encoded-image-to-disk
 exports.saveFile = function saveFile(name, data) {
 
     const base64 = data.replace(/^data:image\/([a-z]+);base64,$/, "");
@@ -15,6 +17,8 @@ exports.saveFile = function saveFile(name, data) {
     });
 };
 
+// Load a file from the filesystem.  This function is also exported with the module
+// https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
 exports.loadFile = function loadFile(name) {
 
     const data = fs.readFileSync(name);

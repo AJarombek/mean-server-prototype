@@ -43,3 +43,6 @@ npm install coveralls mocha-lcov-reporter --save-dev
 
 # Babel polyfill is needed to use async functions
 npm install babel-polyfill --save-dev
+
+# We will use bcrypt to hash and salt the users passwords
+npm install bcrypt --save
