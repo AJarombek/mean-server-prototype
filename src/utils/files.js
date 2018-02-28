@@ -23,7 +23,7 @@ exports.loadFile = function loadFile(name) {
 
     const data = fs.readFileSync(name);
 
-    return `data:image\/png;base64,${data}`;
+    return `data:image\/jpg;base64,${data}`;
 };
 
 // Remove a file from the filesystem.

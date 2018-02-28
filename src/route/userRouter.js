@@ -5,7 +5,7 @@
  */
 
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 const routes = (User) => {
 
@@ -30,23 +30,26 @@ const routes = (User) => {
             // First make sure that the user exists and that it has a password
             if (user !== undefined && user.password) {
                 
-                // Then hash and salt the password with bcrypt - second parameter is the salt rounds
-                bcrypt.hash(user.password, 10).then((hash) => {
-                    
-                    user.password = hash;
+                // Then hash and salt the password with bcrypt - second parameter is the salt rounds, third is a
+                // callback while in progress.  We pass null to automatically generate a salt and because we don't
+                // need any progress updates
+                bcrypt.hash(user.password, null, null, (err, hash) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).send(err);
+                    } else {
 
-                    insert().catch(error => res.status(500).send(error));
-                    
-                    async function insert() {
-                        const newUser = await User.create(user);
-                        console.info(`New User Created: ${newUser}`);
+                        user.password = hash;
 
-                        res.json(newUser);
+                        insert().catch(error => res.status(500).send(error));
+
+                        async function insert() {
+                            const newUser = await User.create(user);
+                            console.info(`New User Created: ${newUser}`);
+
+                            res.json(newUser);
+                        }
                     }
-                    
-                }, (err) => {
-                    console.error(err);
-                    res.status(500).send(err);
                 });
                 
             } else {
@@ -87,16 +90,18 @@ const routes = (User) => {
             if (user.password !== req.body.password) {
                 console.info("Password Is Being Updated");
 
-                bcrypt.hash(req.body.password, 10).then((hash) => {
+                bcrypt.hash(req.body.password, null, null, (err, hash) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).send(err);
+                    } else {
 
-                    user.password = hash;
+                        user.password = hash;
 
-                    update().catch(error => res.status(500).send(error));
-
-                }, (err) => {
-                    console.error(err);
-                    res.status(500).send(err);
+                        update().catch(error => res.status(500).send(error));
+                    }
                 });
+
             } else {
                 update().catch(error => res.status(500).send(error));
             }

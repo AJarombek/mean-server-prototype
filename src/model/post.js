@@ -29,6 +29,7 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
+    user_id: Schema.Types.ObjectId,
     first: String,
     last: String,
     date: {

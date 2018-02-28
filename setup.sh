@@ -45,4 +45,4 @@ npm install coveralls mocha-lcov-reporter --save-dev
 npm install babel-polyfill --save-dev
 
 # We will use bcrypt to hash and salt the users passwords
-npm install bcrypt --save
+npm install bcrypt-nodejs
