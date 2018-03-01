@@ -7,7 +7,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 
-const routes = (User) => {
+const routes = (User, Audit) => {
 
     const userRouter = express.Router();
 
@@ -46,6 +46,16 @@ const routes = (User) => {
                         async function insert() {
                             const newUser = await User.create(user);
                             console.info(`New User Created: ${newUser}`);
+
+                            // Audit the creation of a new user
+                            const audit = new Audit({
+                                object: newUser._id,
+                                type: 'user',
+                                message: `Created User ${newUser.username}`,
+                                source: 'NodeJS MeowCat API'
+                            });
+
+                            await Audit.create(audit);
 
                             res.json(newUser);
                         }
@@ -107,8 +117,22 @@ const routes = (User) => {
             }
 
             async function update() {
-                const updatedUser = await User.save(user).exec();
+                // First update the user with the given username
+                const update = await User.update({username: user.username}, user).exec();
+
+                // Then find the newly updated user
+                const updatedUser = await User.findOne({username: user.username}).exec();
                 console.info(`Updated User: ${updatedUser}`);
+
+                // Audit the edit of a user
+                const audit = new Audit({
+                    object: updatedUser._id,
+                    type: 'user',
+                    message: `Modified User ${updatedUser.username}`,
+                    source: 'NodeJS MeowCat API'
+                });
+
+                await Audit.create(audit);
 
                 res.json(updatedUser);
             }
@@ -119,6 +143,24 @@ const routes = (User) => {
 
             async function remove() {
                 await req.user.remove();
+
+                // Should return null if it was successfully deleted
+                const deleted = await User.findOne({username: req.user.username}).exec();
+
+                // Call the catch() function if the user was not deleted
+                if (deleted !== null) {
+                    throw Error('User Still Exists');
+                }
+
+                // Audit the deletion of a user
+                const audit = new Audit({
+                    object: req.user._id,
+                    type: 'user',
+                    message: `Deleted User ${req.user.username}`,
+                    source: 'NodeJS MeowCat API'
+                });
+
+                await Audit.create(audit);
 
                 res.status(204).send();
             }

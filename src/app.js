@@ -11,9 +11,10 @@ const bodyParser = require('body-parser');
 const Post = require('./model/post');
 const User = require('./model/user');
 const Test = require('./model/test');
+const Audit = require('./model/audit');
 
-const userRouter = require('./route/userRouter')(User);
-const postRouter = require('./route/postRouter')(Post);
+const userRouter = require('./route/userRouter')(User, Audit);
+const postRouter = require('./route/postRouter')(Post, Audit);
 const authRouter = require('./route/authRouter')();
 const testRouter = require('./route/testRouter')(Test);
 

@@ -7,7 +7,7 @@
 const express = require('express');
 const files = require('../utils/files');
 
-const routes = (Post) => {
+const routes = (Post, Audit) => {
 
     const postRouter = express.Router();
 

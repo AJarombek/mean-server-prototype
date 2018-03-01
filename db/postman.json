@@ -1,0 +1,21 @@
+[
+  {"details": "User [POST] - Create New User for Caroline"},
+
+  {
+    "username": "caroline",
+    "first": "Caroline",
+    "last": "Driscoll",
+    "password": "carolined",
+    "postCount": 1
+  },
+
+  {"details": "User [PUT] - Edit User Caroline"},
+
+  {
+    "username": "caroline",
+    "first": "C",
+    "last": "D",
+    "password": "carolinedriscoll",
+    "postCount": 0
+  }
+]
