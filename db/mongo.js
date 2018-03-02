@@ -158,6 +158,9 @@ db.post.insertMany([
 db.post.find().pretty();
 db.post.count(); // 11
 
+// Find a post and sort it by date in ascending order (newest last)
+db.post.find().sort({date: 1}).pretty();
+
 db.user.insertMany([
     {
         username: "andy",

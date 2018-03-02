@@ -14,7 +14,7 @@ const Test = require('./model/test');
 const Audit = require('./model/audit');
 
 const userRouter = require('./route/userRouter')(User, Audit);
-const postRouter = require('./route/postRouter')(Post, Audit);
+const postRouter = require('./route/postRouter')(Post, User, Audit);
 const authRouter = require('./route/authRouter')();
 const testRouter = require('./route/testRouter')(Test);
 

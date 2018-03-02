@@ -7,7 +7,7 @@
 const express = require('express');
 const files = require('../utils/files');
 
-const routes = (Post, Audit) => {
+const routes = (Post, User, Audit) => {
 
     const postRouter = express.Router();
 
@@ -40,8 +40,41 @@ const routes = (Post, Audit) => {
                 insert().catch(error => res.status(500).send(error));
 
                 async function insert() {
+
+                    // Get the user that is about to create a new post
+                    const user = await User.findOne({username: post.username}).exec();
+
+                    // Set the new posts user_id to the user ID we just received
+                    post.user_id = user._id;
+
                     const newPost = await Post.create(post);
-                    console.info(`New User Created: ${newPost}`);
+                    console.info(`New Post Created: ${newPost}`);
+
+                    if (newPost === null || newPost.username === undefined) {
+                        throw Error("Invalid New Post");
+                    }
+
+                    // Audit the creation of a new post
+                    const auditPost = new Audit({
+                        object: newPost._id,
+                        type: 'post',
+                        message: `Created Post ${newPost.name} by ${newPost.username}`,
+                        source: 'NodeJS MeowCat API'
+                    });
+
+                    await Audit.create(auditPost);
+
+                    await User.findOneAndUpdate({username: newPost.username}, { $inc: { postCount: 1}});
+
+                    // Audit the update of a user (increment post count)
+                    const auditUser = new Audit({
+                        object: user._id,
+                        type: 'user',
+                        message: `Modified User ${newPost.username}`,
+                        source: 'NodeJS MeowCat API'
+                    });
+
+                    await Audit.create(auditUser);
 
                     res.json(newPost);
                 }

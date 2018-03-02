@@ -24,6 +24,10 @@ module.exports = {
         './src/app'
     ],
     target: "node",
+    node: {
+        __dirname: false,
+        __filename: false
+    },
     module: {
         rules: [{
             test: /\.js?$/,
