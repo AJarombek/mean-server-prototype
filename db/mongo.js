@@ -7,10 +7,14 @@ db.test.insert({"time":Date()});
 db.test.find().pretty();
 db.test.count();
 
-// Delete all the documents in the test collection
-db.test.deleteMany({});
+// Look through the audit table
+db.audit.find().pretty();
 
+// Delete all the documents in the collections
+db.test.deleteMany({});
+db.user.deleteMany({});
 db.post.deleteMany({});
+db.audit.deleteMany({});
 
 let andy_id = db.user.findOne({username: "andy"})._id;
 let tom_id = db.user.findOne({username: "tom"})._id;
@@ -160,6 +164,9 @@ db.post.count(); // 11
 
 // Find a post and sort it by date in ascending order (newest last)
 db.post.find().sort({date: 1}).pretty();
+
+// Find a post with a specific id
+db.post.find({_id: ObjectId("5a9b05ee77b4e063b778ae80")}).pretty();
 
 db.user.insertMany([
     {

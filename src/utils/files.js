@@ -11,7 +11,8 @@ const path = require('path');
 // https://stackoverflow.com/questions/6926016/nodejs-saving-a-base64-encoded-image-to-disk
 exports.saveFile = function saveFile(name, data) {
 
-    const base64 = data.replace(/^data:image\/([a-z]+);base64,$/, "");
+    // Replace the start of the base 64 encoding - this is not the actual picture file data
+    const base64 = data.replace(/^data:image\/([a-z]+);base64,/, "");
 
     fs.writeFile(path.join(__dirname, `../../pics/${name}`), base64, 'base64', (err) => {
         console.error(err);

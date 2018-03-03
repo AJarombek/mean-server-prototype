@@ -33,8 +33,11 @@ const routes = (Post, User, Audit) => {
 
             if (post.picture && post.name && post.picture && data) {
 
+                // The naming convention for saved files is [username]_[filename].[filetype]
+                post.picture = `${post.username}_${post.picture}`;
+
                 // First save the file to the servers filesystem
-                files.saveFile(post.name, data);
+                files.saveFile(post.picture, data);
 
                 // Then insert the post into MongoDB
                 insert().catch(error => res.status(500).send(error));
@@ -58,7 +61,7 @@ const routes = (Post, User, Audit) => {
                     const auditPost = new Audit({
                         object: newPost._id,
                         type: 'post',
-                        message: `Created Post ${newPost.name} by ${newPost.username}`,
+                        message: `Created Post '${newPost.name}' by ${newPost.username}`,
                         source: 'NodeJS MeowCat API'
                     });
 
@@ -110,7 +113,17 @@ const routes = (Post, User, Audit) => {
             let post = req.post;
 
             // Only a few of posts properties are allowed to change
-            post.picture = req.body.picture;
+
+            // Save a new picture to the filesystem if the pictures name has changed and the request has picture data
+            if (post.picture !== req.body.picture  && req.body.pictureData) {
+
+                console.info("New Picture Uploaded: Saving to Filesystem");
+                req.body.picture = `${post.username}_${req.body.picture}`;
+
+                files.saveFile(req.body.picture, req.body.pictureData);
+                post.picture = req.body.picture;
+            }
+
             post.name = req.body.name;
             post.description = req.body.description;
             post.up = req.body.up;
@@ -119,25 +132,71 @@ const routes = (Post, User, Audit) => {
             update().catch(error => res.status(500).send(error));
 
             async function update() {
-                const updatedPost = await Post.save(post).exec();
+
+                // First update the post with the given id
+                const update = await Post.update({_id: post._id}, post).exec();
+
+                // Then find the newly updated user
+                const updatedPost = await Post.findOne({_id: post._id}).exec();
                 console.info(`Updated Post: ${updatedPost}`);
+
+                // Audit the edit of a user
+                const audit = new Audit({
+                    object: updatedPost._id,
+                    type: 'post',
+                    message: `Modified Post '${updatedPost.name}' by ${updatedPost.username}`,
+                    source: 'NodeJS MeowCat API'
+                });
+
+                await Audit.create(audit);
 
                 res.json(updatedPost);
             }
         })
         .delete((req, res) => {
+
+            // If the remove function errors out, return a 500 status
             remove().catch(error => res.status(500).send(error));
 
+            // Function for removing the post from MongoDB
             async function remove() {
-
-                // We need to get the picture name for this post so we can remove it from the file system
-                const post = await Post.findById(req.params.id).exec();
 
                 await req.post.remove();
 
-                files.removeFile(post.picture);
+                // Should return null if we successfully deleted the post from Mongo
+                const deleted = await Post.findById(req.params.id).exec();
+
+                // Call the catch() function if the post was not deleted
+                if (deleted !== null) {
+                    throw Error('Post Still Exists');
+                }
+
+                // Audit the deletion of a post
+                const audit = new Audit({
+                    object: req.post._id,
+                    type: 'post',
+                    message: `Deleted Post '${req.post.name}' by ${req.post.username}`,
+                    source: 'NodeJS MeowCat API'
+                });
+
+                await Audit.create(audit);
 
                 res.status(204).send();
+
+                // If the remove file function errors out just log an error message
+                removeFile().catch(error => console.error(error));
+            }
+
+            // Function for removing the posts file from the filesystem if no other posts reference it
+            async function removeFile() {
+                const postReferencingFile = await Post.findOne({picture: req.post.picture}).exec();
+
+                if (!postReferencingFile) {
+                    console.info("There are no posts referencing this file.  It will be deleted.");
+                    files.removeFile(req.post.picture);
+                } else {
+                    console.info(`There is still a post referencing this file with ID: ${postReferencingFile._id}`);
+                }
             }
         });
 
