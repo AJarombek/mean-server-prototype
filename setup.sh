@@ -46,3 +46,19 @@ npm install babel-polyfill --save-dev
 
 # We will use bcrypt to hash and salt the users passwords
 npm install bcrypt-nodejs
+
+# Helmet helps protect Node.js from well known security vulnerabilities
+# https://expressjs.com/en/advanced/best-practice-security.html
+npm install helmet --save
+
+# Dependency used to setup JSON Web Token user authentication
+npm install jsonwebtoken --save
+
+# Generate a new RS256 key for a JSON Web Token
+# https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9
+# ssh-keygen is used for creating auth pairs for SSH
+# https://www.ssh.com/ssh/keygen/
+ssh-keygen -t rsa -b 4096 -f private.key
+
+# Handle middleware commonly used with JWT
+npm install express-jwt --save

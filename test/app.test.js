@@ -19,7 +19,9 @@ describe("GET '/'", () => {
             .get('/')
             .expect('Content-Type', /json/)
             .expect(200)
-            .expect('Content-Length', '36')
-            .expect('X-Powered-By', 'Express');
+            .expect('Content-Length', '36');
+            // Helmet disables X-Powered-By.  This is more secure because attackers will not know that the application
+            // is using Node.js and Express for the API
+            //.expect('X-Powered-By', 'Express');
     });
 });

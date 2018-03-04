@@ -6,11 +6,13 @@
 
 const express = require('express');
 const files = require('../utils/files');
+const jwtUtils = require('../utils/jwt');
 
 const routes = (Post, User, Audit) => {
 
     const postRouter = express.Router();
 
+    // The HTTP POST request for posts is not public, valid JWT token must be present on HTTP request
     postRouter.route('/')
         .get((req, res) => {
 
@@ -22,7 +24,7 @@ const routes = (Post, User, Audit) => {
                 res.json(posts);
             }
         })
-        .post((req, res) => {
+        .post(jwtUtils.checkIfAuthenticated, (req, res) => {
 
             // pictureData is not a part of the Post Schema, so remove it once we assign it a variable
             const data = req.body.pictureData;
@@ -79,7 +81,7 @@ const routes = (Post, User, Audit) => {
 
                     await Audit.create(auditUser);
 
-                    res.json(newPost);
+                    res.status(201).json(newPost);
                 }
             } else {
                 res.status(500).send("Error: Invalid Post Entered");
@@ -104,11 +106,12 @@ const routes = (Post, User, Audit) => {
         }
     });
 
+    // The HTTP PUT & DELETE requests for posts are not public, valid JWT token must be present on HTTP request
     postRouter.route('/:id')
         .get((req, res) => {
             res.json(req.post);
         })
-        .put((req, res) => {
+        .put(jwtUtils.checkIfAuthenticated, (req, res) => {
 
             let post = req.post;
 
@@ -153,7 +156,7 @@ const routes = (Post, User, Audit) => {
                 res.json(updatedPost);
             }
         })
-        .delete((req, res) => {
+        .delete(jwtUtils.checkIfAuthenticated, (req, res) => {
 
             // If the remove function errors out, return a 500 status
             remove().catch(error => res.status(500).send(error));

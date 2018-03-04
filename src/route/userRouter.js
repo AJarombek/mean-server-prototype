@@ -6,6 +6,7 @@
 
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
+const jwtUtils = require('../utils/jwt');
 
 const routes = (User, Audit) => {
 
@@ -41,7 +42,21 @@ const routes = (User, Audit) => {
 
                         user.password = hash;
 
-                        insert().catch(error => res.status(500).send(error));
+                        usernameAvailable().catch(() => res.status(500).send("Username not Available"));
+
+                        // Then check that the username is available.  If not, send back an HTTP Bad Request 400 error.
+                        // Otherwise continue with inserting the new user into the database
+                        async function usernameAvailable() {
+                            const user = await User.findOne({username: user.username}, user).exec();
+                            console.info(`User: ${user}`);
+
+                            if (user) {
+                                console.info(`User already exists with username ${user.username}`);
+                                res.status(400).send('Username already exists.');
+                            } else {
+                                insert().catch(() => res.status(500).send("Insert Failed"));
+                            }
+                        }
 
                         async function insert() {
                             const newUser = await User.create(user);
@@ -57,7 +72,7 @@ const routes = (User, Audit) => {
 
                             await Audit.create(audit);
 
-                            res.json(newUser);
+                            res.status(201).json(newUser);
                         }
                     }
                 });
@@ -85,11 +100,12 @@ const routes = (User, Audit) => {
         }
     });
 
+    // The HTTP PUT & DELETE requests for users are not public, valid JWT token must be present on HTTP request
     userRouter.route('/:username')
         .get((req, res) => {
             res.json(req.user);
         })
-        .put((req, res) => {
+        .put(jwtUtils.checkIfAuthenticated, (req, res) => {
 
             let user = req.user;
 
@@ -137,7 +153,7 @@ const routes = (User, Audit) => {
                 res.json(updatedUser);
             }
         })
-        .delete((req, res) => {
+        .delete(jwtUtils.checkIfAuthenticated, (req, res) => {
 
             remove().catch(error => res.status(500).send(error));
 

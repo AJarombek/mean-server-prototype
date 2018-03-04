@@ -7,6 +7,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const Post = require('./model/post');
 const User = require('./model/user');
@@ -15,7 +16,7 @@ const Audit = require('./model/audit');
 
 const userRouter = require('./route/userRouter')(User, Audit);
 const postRouter = require('./route/postRouter')(Post, User, Audit);
-const authRouter = require('./route/authRouter')();
+const authRouter = require('./route/authRouter')(User);
 const testRouter = require('./route/testRouter')(Test);
 
 // Mongoose 5.0 uses native JS Promises by default (less config needed!)
@@ -25,6 +26,9 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+// Helps protect our API endpoint from well known web security vulnerabilities
+app.use(helmet());
 
 const port = process.env.port || 3000;
 
