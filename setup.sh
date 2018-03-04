@@ -62,3 +62,6 @@ ssh-keygen -t rsa -b 4096 -f private.key
 
 # Handle middleware commonly used with JWT
 npm install express-jwt --save
+
+# Retrieve RSA signing keys from JWKS (JSON Web Key Set) endpoint.  This allows keys to rotate
+npm install jwks-rsa --save

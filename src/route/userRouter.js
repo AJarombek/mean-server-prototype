@@ -27,10 +27,10 @@ const routes = (User, Audit) => {
 
             const user = new User(req.body);
             console.info(`Creating User: ${user}`);
-            
+
             // First make sure that the user exists and that it has a password
             if (user !== undefined && user.password) {
-                
+
                 // Then hash and salt the password with bcrypt - second parameter is the salt rounds, third is a
                 // callback while in progress.  We pass null to automatically generate a salt and because we don't
                 // need any progress updates
@@ -42,41 +42,41 @@ const routes = (User, Audit) => {
 
                         user.password = hash;
 
-                        usernameAvailable().catch(() => res.status(500).send("Username not Available"));
+                        console.info('About to call insert()');
+                        insert(user).catch(() => res.status(500).send("User Creation Failed"));
 
                         // Then check that the username is available.  If not, send back an HTTP Bad Request 400 error.
                         // Otherwise continue with inserting the new user into the database
-                        async function usernameAvailable() {
-                            const user = await User.findOne({username: user.username}, user).exec();
+                        async function insert(user) {
+                            console.info(`Username: ${user.username}`);
+                            const existingUser = await User.findOne({username: user.username}).exec();
                             console.info(`User: ${user}`);
 
-                            if (user) {
+                            if (existingUser) {
                                 console.info(`User already exists with username ${user.username}`);
                                 res.status(400).send('Username already exists.');
                             } else {
-                                insert().catch(() => res.status(500).send("Insert Failed"));
+
+                                // The username is available, so create the new user!
+                                const newUser = await User.create(user);
+                                console.info(`New User Created: ${newUser}`);
+
+                                // Audit the creation of a new user
+                                const audit = new Audit({
+                                    object: newUser._id,
+                                    type: 'user',
+                                    message: `Created User ${newUser.username}`,
+                                    source: 'NodeJS MeowCat API'
+                                });
+
+                                await Audit.create(audit);
+
+                                res.status(201).json(newUser);
                             }
-                        }
-
-                        async function insert() {
-                            const newUser = await User.create(user);
-                            console.info(`New User Created: ${newUser}`);
-
-                            // Audit the creation of a new user
-                            const audit = new Audit({
-                                object: newUser._id,
-                                type: 'user',
-                                message: `Created User ${newUser.username}`,
-                                source: 'NodeJS MeowCat API'
-                            });
-
-                            await Audit.create(audit);
-
-                            res.status(201).json(newUser);
                         }
                     }
                 });
-                
+
             } else {
                 res.status(500).send("Error: User must have a Password");
             }
