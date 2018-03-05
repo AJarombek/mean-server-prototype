@@ -8,6 +8,9 @@ const express = require('express');
 const files = require('../utils/files');
 const jwtUtils = require('../utils/jwt');
 
+// Get the current environment Node is running in
+const environment = process.env.NODE_ENV || 'development';
+
 const routes = (Post, User, Audit) => {
 
     const postRouter = express.Router();
@@ -20,6 +23,14 @@ const routes = (Post, User, Audit) => {
 
             async function find() {
                 const posts = await Post.find().exec();
+
+                // If we are in the development environment (running locally) we need to send the base64 encoded picture
+                // data along with each post object in the response body
+                if (environment === 'development') {
+                    posts.forEach(post => {
+                        post.picture = files.loadFile(post.picture);
+                    });
+                }
 
                 res.json(posts);
             }

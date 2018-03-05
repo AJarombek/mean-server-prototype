@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-    id: Schema.Types.ObjectId,
     picture: {
         type: String,
         required: true,

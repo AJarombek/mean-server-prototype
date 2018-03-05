@@ -7,6 +7,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
+const jwtUtils = require('../utils/jwt');
 
 const routes = (User) => {
 
@@ -18,7 +19,7 @@ const routes = (User) => {
             const username = req.body.username;
             const password = req.body.password;
 
-            getToken().catch(error => res.status(500).send(error));
+            getToken().catch(error => {console.error(error); res.status(500).send(error)});
 
             async function getToken() {
 
@@ -27,11 +28,13 @@ const routes = (User) => {
                 // Synchronously compare the password submitted and the hashed value in MongoDB
                 if(bcrypt.compareSync(password, user.password)) {
 
+                    console.info("Valid Username and Password Entered!");
+
                     // Create the JWT string for authentication
-                    const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+                    const jwtBearerToken = jwt.sign({}, jwtUtils.RSA_PRIVATE_KEY, {
                        algorithm: 'RS256',
                        expiresIn: 300,
-                       subject: user._id
+                       subject: user._id.toString()
                     });
 
                     // Send the client the JWT along with its expiration date

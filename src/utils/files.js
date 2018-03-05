@@ -23,9 +23,19 @@ exports.saveFile = function saveFile(name, data) {
 // https://stackoverflow.com/questions/24523532/how-do-i-convert-an-image-to-a-base64-encoded-data-url-in-sails-js-or-generally
 exports.loadFile = function loadFile(name) {
 
-    const data = fs.readFileSync(path.join(__dirname, `../../pics/${name}`));
+    // Get the file extension for the image
+    const nameParts = name.split('.');
+    const extension = nameParts[nameParts.length - 1];
 
-    return `data:image\/jpg;base64,${data}`;
+    try {
+        const data = fs.readFileSync(path.join(__dirname, `../../pics/${name}`));
+        const base64Data = data.toString('base64');
+
+        return `data:image\/${extension};base64,${base64Data}`;
+    } catch(ex) {
+        console.error(ex);
+        return null;
+    }
 };
 
 // Remove a file from the filesystem.

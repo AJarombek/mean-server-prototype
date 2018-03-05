@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // Helps protect our API endpoint from well known web security vulnerabilities
-app.use(helmet());
+app.use(helmet({}));
 
 const port = process.env.port || 3000;
 
