@@ -33,7 +33,7 @@ const routes = (User) => {
                     // Create the JWT string for authentication
                     const jwtBearerToken = jwt.sign({}, jwtUtils.RSA_PRIVATE_KEY, {
                        algorithm: 'RS256',
-                       expiresIn: 300,
+                       expiresIn: 3600,
                        subject: user._id.toString()
                     });
 
@@ -41,7 +41,7 @@ const routes = (User) => {
                     // Another popular option is to send JWT in a cookie instead of the HTTP body
                     res.status(200).json({
                         idToken: jwtBearerToken,
-                        expiresIn: 300
+                        expiresIn: 3600
                     });
 
                 } else {

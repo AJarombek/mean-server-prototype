@@ -62,6 +62,8 @@ const routes = (Post, User, Audit) => {
 
                     // Set the new posts user_id to the user ID we just received
                     post.user_id = user._id;
+                    post.first = user.first;
+                    post.last = user.last;
 
                     const newPost = await Post.create(post);
                     console.info(`New Post Created: ${newPost}`);

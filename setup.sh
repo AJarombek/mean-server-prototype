@@ -60,6 +60,9 @@ npm install jsonwebtoken --save
 # https://www.ssh.com/ssh/keygen/
 ssh-keygen -t rsa -b 4096 -f private.key
 
+# Generate public key from the private key
+openssl rsa -in private.key -pubout -outform PEM -out private.key.pub
+
 # Handle middleware commonly used with JWT
 npm install express-jwt --save
 

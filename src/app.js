@@ -24,8 +24,9 @@ mongoose.connect('mongodb://127.0.0.1/meowcat');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+// Set a larger payload limit for HTTP requests since some image data will be large
+app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
 
 // Helps protect our API endpoint from well known web security vulnerabilities
 app.use(helmet({}));
