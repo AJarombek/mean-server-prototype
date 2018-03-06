@@ -3,6 +3,9 @@ node_js:
   - '9.2'
   - '8.0'
 
+services:
+  - mongodb
+
 script:
   - npm run test
 
