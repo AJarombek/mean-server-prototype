@@ -68,3 +68,7 @@ npm install express-jwt --save
 
 # Retrieve RSA signing keys from JWKS (JSON Web Key Set) endpoint.  This allows keys to rotate
 npm install jwks-rsa --save
+
+# When you encounter this error: Error: listen EADDRINUSE :::3000
+# Make sure to kill the process running node
+pkill node

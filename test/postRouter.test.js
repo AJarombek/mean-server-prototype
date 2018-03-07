@@ -7,7 +7,7 @@
 const request = require('supertest');
 const app = require('../src/app');
 
-// Tests for the default endpoint '/'
+// Tests for the post api endpoint '/api/post'
 describe("GET '/api/post'", () => {
     it('responded with a 200', () => {
         return request(app).get('/api/post').expect(200);

@@ -9,12 +9,12 @@ const path = require('path');
 const fs = require('fs');
 
 // Private key for the RS256 encryption signature
-const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../../private.key'));
+const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../private.key'));
 
 exports.RSA_PRIVATE_KEY = RSA_PRIVATE_KEY;
 
 // Public key for the RS256 encryption signature
-const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, '../../private.key.pub'));
+const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, '../private.key.pub'));
 
 exports.RSA_PUBLIC_KEY = RSA_PUBLIC_KEY;
 

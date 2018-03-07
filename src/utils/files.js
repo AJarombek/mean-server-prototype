@@ -14,7 +14,7 @@ exports.saveFile = function saveFile(name, data) {
     // Replace the start of the base 64 encoding - this is not the actual picture file data
     const base64 = data.replace(/^data:image\/([a-z]+);base64,/, "");
 
-    fs.writeFile(path.join(__dirname, `../../pics/${name}`), base64, 'base64', (err) => {
+    fs.writeFile(path.join(__dirname, `../pics/${name}`), base64, 'base64', (err) => {
         console.error(err);
     });
 };
@@ -28,7 +28,7 @@ exports.loadFile = function loadFile(name) {
     const extension = nameParts[nameParts.length - 1];
 
     try {
-        const data = fs.readFileSync(path.join(__dirname, `../../pics/${name}`));
+        const data = fs.readFileSync(path.join(__dirname, `../pics/${name}`));
         const base64Data = data.toString('base64');
 
         return `data:image\/${extension};base64,${base64Data}`;
@@ -40,7 +40,7 @@ exports.loadFile = function loadFile(name) {
 
 // Remove a file from the filesystem.
 exports.removeFile = function removeFile(name) {
-    fs.unlink(path.join(__dirname, `../../pics/${name}`), (err) => {
+    fs.unlink(path.join(__dirname, `../pics/${name}`), (err) => {
 
         if (err) {
             console.error('Failed to Remove File');
@@ -52,9 +52,9 @@ exports.removeFile = function removeFile(name) {
 
 // List all the picture files currently on the Node Express server
 exports.listFiles = function listFiles() {
-    fs.readdir(path.join(__dirname, '../../pics'), (err, files) => {
+    fs.readdir(path.join(__dirname, '../pics'), (err, files) => {
 
-        console.info(path.join(__dirname, '../../pics'));
+        console.info(path.join(__dirname, '../pics'));
         console.info(`Files in Directory: \n`);
         files.forEach(file => {
             console.info(file);

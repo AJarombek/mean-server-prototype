@@ -6,6 +6,11 @@ node_js:
 services:
   - mongodb
 
+# Put some mock data into MongoDB for testing purposes
+# https://docs.travis-ci.com/user/database-setup/#MongoDB
+before_script:
+  - mongo meowcat --eval 'db.user.insert({_id: '5a9616e6c5631b2e8bd0bd5e',username: "andy",first: "Andrew",last: "Jarombek",password: "pw",postCount: 4});'
+
 script:
   - npm run test
 
